@@ -7,9 +7,9 @@ ACTIVE_PROXIES = []
 
 def load_proxy():
     with open('proxies.txt', 'r') as proxy:
-        all = proxy.read().strip('\n')
+        all = proxy.readlines()
         for p in all:
-            PROXIES.append(p)
+            PROXIES.append(p.strip('\n'))
 load_proxy()  
 
 def save_active_proxy():
@@ -25,7 +25,8 @@ def spin(proxy: str):
         ACTIVE_PROXIES.append(proxy)
         return result.get('ip') + f" [{len(ACTIVE_PROXIES)}]"
     except Exception as e:
-        return result.get('ip') + f" [{len(ACTIVE_PROXIES)}]"
+        # print(proxy + f" [{len(ACTIVE_PROXIES)}] --Failed")
+        return proxy + f" [{len(ACTIVE_PROXIES)}] --Failed"
 
 def filter_active_proxies():
     with ThreadPoolExecutor(max_workers=20) as executor:
@@ -37,3 +38,4 @@ def filter_active_proxies():
     
 # spin("94.79.152.14:80")
 filter_active_proxies()
+# print(len(PROXIES))
