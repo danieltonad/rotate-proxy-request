@@ -19,14 +19,20 @@ def save_active_proxy():
 
 def spin(proxy: str):
     try:
-        res= requests.get('https://ipinfo.io/json', proxies={'https': proxy, 'http': proxy})
+        res= requests.get('https://ipinfo.io/json', proxies={'https': proxy, 'http': proxy}, timeout=20)
         result = res.json()
-        # print(result.get('ip'))
         ACTIVE_PROXIES.append(proxy)
         return result.get('ip') + f" [{len(ACTIVE_PROXIES)}]"
     except Exception as e:
-        # print(proxy + f" [{len(ACTIVE_PROXIES)}] --Failed")
         return proxy + f" [{len(ACTIVE_PROXIES)}] --Failed"
+
+def test_proxy(proxy: str):
+    try:
+        res= requests.get('https://ipinfo.io/json', proxies={'https': proxy, 'http': proxy}, timeout=20)
+        result = res.json()
+        print(result.get('ip'))
+    except Exception as e:
+        print(proxy + f" -- Failed")
 
 def filter_active_proxies():
     with ThreadPoolExecutor(max_workers=20) as executor:
@@ -36,6 +42,6 @@ def filter_active_proxies():
             print(result)
     save_active_proxy()
     
-# spin("94.79.152.14:80")
-filter_active_proxies()
+test_proxy("196.20.125.133:8083")
+# filter_active_proxies()
 # print(len(PROXIES))
